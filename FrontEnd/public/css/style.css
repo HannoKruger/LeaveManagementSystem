@@ -1,0 +1,53 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+/* Global */
+body
+{
+    /* position: relative; */
+    /* padding-top: 65px; */
+    height: 100%;
+    background: rgb(227, 245, 238);
+    font-family: 'Open Sans', sans-serif;
+}
+#margin
+{
+    margin-left: 3%;
+    margin-right: 3%;
+
+    height: 100%;
+}
+
+h1,h2
+{
+    color: rgb(14, 33, 51);
+}
+
+
+
+.title
+{  
+    font-size: 19px;
+    color: #e3f5ef;
+}
+
+
+section
+{
+    scroll-margin-top: 75px;
+    margin-top: 25px;
+    margin-bottom: 50px;
+}
+
+
+
+
+
+/* Home section */
+.bimage 
+{
+    
+    background: url('/assets/images/mandelbrot4k.jpg');
+    opacity: 0.8;
+
+    /* background-image: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), url('/assets/images/mandelbrot4k.jpg'); */ 
+}
