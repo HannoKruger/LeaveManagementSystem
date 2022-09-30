@@ -1,2 +1,1 @@
-# LeaveManagementSystem
- 
+# Leave Management System
