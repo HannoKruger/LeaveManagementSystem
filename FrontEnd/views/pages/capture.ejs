@@ -9,8 +9,6 @@
         <!-- bootstrap css-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
 
-        <!-- main page css -->
-        <link rel="stylesheet" href="css/style.css">
 
         <!-- Jquery -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -21,8 +19,13 @@
         <!-- bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 
+
+        <!-- main page css -->
+        <link rel="stylesheet" href="css/style.css">
+
         <!-- main js -->
         <script type='text/javascript' src='js/main.js'></script>
+
 
 </head>
 
@@ -30,53 +33,84 @@
 <body>
     <%- include('../partials/navbar') %>
 
+        <script>
+            $(document).ready(() =>
+            {
+                var style = document.getElementById("capture-nav").style;
+                style.borderRadius = "6px";
+                style.backgroundColor = "rgb(98, 149, 189)";
+                style.transition = "background-color 3500ms";
+            });
+        </script>
+
 
         <div id="margin">
 
-            <!-- about section-->
-            <!-- <section id="about">
-                <div class="container mt-4 pt-4">
-                    <h1>Capture</h1>
-                                     
-                </div>
-            </section> -->
-
-
             <section>
+                <form id="form" action="/form-post" method="post" class="row g-3 needs-validation" novalidate>
+                    <div class="col-6">
+                        <label for="form-elem" class="form-label">First name</label>
+                        <input name="Name" type="text" class="form-control" id="form-name" onfocusout="GetCurrentLeave()" placeholder="Mark" required>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                    <div class="col-6">
+                        <label for="form-elem" class="form-label">Last name</label>
+                        <input name="Surname" type="text" class="form-control" id="form-surname" onfocusout="GetCurrentLeave()" placeholder="Otto"
+                            required>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
 
-                <form>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="inputEmail4">Email</label>
-                            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="inputPassword4">Password</label>
-                            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-                        </div>
+                    <div class="col-6">
+                        <label for="form-elem" class="form-label">Leave start date</label>
+                        <input name="LeaveStartDate" type="date" class="form-control" id="form-leave-start" required>
+                        <div class="valid-feedback">Looks good!</div>
                     </div>
-                    <div class="form-group">
-                        <label for="inputAddress">Address</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                    </div>                       
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gridCheck">
-                            <label class="form-check-label" for="gridCheck">
-                                Check me out
-                            </label>
-                        </div>
+                    <div class="col-6">
+                        <label for="form-elem" class="form-label">Leave end date</label>
+                        <input name="LeaveEndDate" type="date" class="form-control" id="form-leave-end" required>
+                        <div class="valid-feedback">Looks good!</div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                    
+                        <div class="row-sm-6">
+                            <label for="message" class="form-label">Current leave left (without current subtracted):</label>
+                            <input type="number" readonly class="form-disp" id="form-current-leave">
+                        </div>
+                        <div class="row-sm-6">
+                            <label for="message" class="form-label">Total Leave days taken:</label>
+                            <input type="number" readonly class="form-disp">
+                        </div>
+                        <div class="row-sm-6">
+                            <label for="message" class="form-label">Total Leave days left:</label>
+                            <input type="number" readonly class="form-disp">
+                        </div>
+                   
+
+
+                    <div class="row-6">
+                        <label for="form-elem" class="form-label">Choose the type of leave</label>
+                        <select class="form-select">
+                            <option value="0" selected>Zero</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="message" class="form-label">Reason</label>
+                        <textarea rows="2" name="message" id="message" placeholder="Your Message"
+                            class="form-control w-full px-3 py-2 rounded-sm placeholder-gray-500 text-gray-900 bg-gray-100 text-sm focus:btn-outline-primary"
+                            required></textarea>
+                    </div>
+
+
+
+                    <div class="col-12">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
                 </form>
-
             </section>
-
-
-
-
-
-
 
 
 

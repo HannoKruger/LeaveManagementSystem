@@ -3,8 +3,10 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const http = require('http');
 const ejs = require('ejs');
+const qs = require('querystring')
 
 const router = express.Router();
+
 
 
 // Initialise Express
@@ -25,15 +27,25 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 
 
-router.post('/api',async (req,res) => 
+router.post('/form-post',async (req,res) => 
 {
     console.log("Req for:"+JSON.stringify(req.body));
     
-    let data = "Hello World";
+    let data = "Sucess";
 
-    console.log('data returned: '+ JSON.stringify(data));
+    //console.log('data returned: '+ JSON.stringify(data));
 
-    res.json(data); 
+    res.json(data);
+});
+
+router.get('/get-leave',async (req,res) =>{
+    console.log("Get leave request");
+
+    let data = "20";
+
+    //console.log('data returned: '+ JSON.stringify(data));
+
+    res.json(data);
 });
 
 

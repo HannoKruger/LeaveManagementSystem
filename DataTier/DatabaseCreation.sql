@@ -141,7 +141,7 @@ BEGIN
 	END	
 		EXEC [Create] @DBName, @TableName,
 		'(							
-			LeaveType varchar(500)	
+			LeaveType varchar(500) PRIMARY KEY
 		 )';
 
 	set @s = 'select @cnt = (select count(*) from ' + @TableName +')';

@@ -17,7 +17,6 @@
             integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"
             crossorigin="anonymous"></script>
 
-
         <!-- bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -30,8 +29,21 @@
 <body>
     <%- include('../partials/navbar') %>
 
-       
+    <script>
+        $(document).ready(() =>
+        {
+            var style = document.getElementById("list-nav").style;
+            style.borderRadius = "6px";
+            style.backgroundColor = "rgb(98, 149, 189)";
+            style.transition = "background-color 3500ms";
+        });
+    </script>
+
+
         <div id="margin">
+
+
+
 
             <!-- about section-->
             <section id="about">
