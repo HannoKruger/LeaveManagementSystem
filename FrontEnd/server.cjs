@@ -4,7 +4,7 @@ const express = require('express');
 const http = require('http');
 const ejs = require('ejs');
 const qs = require('querystring')
-
+const request = require('request');
 const router = express.Router();
 
 
@@ -26,26 +26,50 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 
 
-
-router.post('/form-post',async (req,res) => 
+router.post('/form-data', async (req, res) => 
 {
-    console.log("Req for:"+JSON.stringify(req.body));
-    
+    console.log("Req for:" + JSON.stringify(req.body));
+
     let data = "Sucess";
+
+
+    request.post({
+        headers: { 'content-type': 'application/json; charset=utf-8' },
+        url: 'http://localhost:8080' + '/form-data',
+        body: JSON.stringify(req.body)
+    }, function (error, response, body)
+    {
+        console.log("Response from server: " + body);
+
+    });
+
+
 
     //console.log('data returned: '+ JSON.stringify(data));
 
     res.json(data);
 });
 
-router.get('/get-leave',async (req,res) =>{
-    console.log("Get leave request");
 
-    let data = "20";
+router.get('/leave', async (req, res) =>
+{
+    //console.log("Req for:" + req.query);
 
-    //console.log('data returned: '+ JSON.stringify(data));
+    request.get(
+        {
+            headers: { 'content-type': 'application/json; charset=utf-8' },
+            url: 'http://localhost:8080' + '/leave',
+            body: JSON.stringify(req.query)
+        },
+        function (error, response, body) 
+        {
+            console.log("body: "+body);
+        
+            response = "Sucess";
 
-    res.json(data);
+            res.json(body);
+        });
+
 });
 
 
@@ -58,15 +82,18 @@ const server = http.createServer(app);
 server.listen(port);
 
 // *** GET Routes - display pages ***
-app.get('/',(req, res) => {
+app.get('/', (req, res) =>
+{
     res.redirect('/capture');
 });
 
-app.get('/capture',(req, res) =>{
+app.get('/capture', (req, res) =>
+{
     res.status(200).render('pages/capture');
 });
 
-app.get('/list', (req, res) => {
+app.get('/list', (req, res) =>
+{
     res.render('pages/requests');
 });
 

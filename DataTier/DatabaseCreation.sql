@@ -52,7 +52,7 @@ END
 GO
 
 
-USE [LeaveManagement]																								------------------CAN CHANGE---------------
+USE [LeaveManagement]																									------------------CAN CHANGE---------------
 GO
 
 
@@ -67,11 +67,35 @@ SET DATEFORMAT YMD
 
 SET @DBName = db_name();
 --for csv insert
-SET @RelDir = 'C:\Users\hanno\OneDrive\Documents\Coding\Github\LeaveManagementSystem\DataTier\csv\'			  ------------------CAN CHANGE---------------
+SET @RelDir = 'C:\Users\hanno\OneDrive\Documents\Coding\Github\LeaveManagementSystem\DataTier\csv\'						------------------CAN CHANGE---------------
 
---exec sp_MSforeachtable "declare @name nvarchar(max); set @name = parsename('?', 1); exec sp_MSdropconstraints @name";
---exec sp_MSforeachtable "drop table ?";
+exec sp_MSforeachtable "declare @name nvarchar(max); set @name = parsename('?', 1); exec sp_MSdropconstraints @name";
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+BEGIN
+	set @TableName = 'LeaveType'																		                ------------------CAN CHANGE---------------
+
+	IF EXISTS (SELECT * FROM sysobjects WHERE name = @TableName and xtype='U')
+	BEGIN	
+		select @sql = 'DROP TABLE ' + @TableName
+		exec (@sql)	
+	END	
+		EXEC [Create] @DBName, @TableName,
+		'(							
+			LeaveType varchar(500) PRIMARY KEY
+		 )';
+
+	set @s = 'select @cnt = (select count(*) from ' + @TableName +')';
+	exec sp_executesql @s, N'@cnt nvarchar(20) output', @cnt output;
+
+	IF(@Cnt < 2)
+	BEGIN	
+		set @FileName = @RelDir+@TableName+'.csv'
+		print @filename
+		set @sql = 'BULK INSERT ' + @TableName + ' FROM ''' + @FileName + ''' WITH (FIRSTROW = 2, FIELDTERMINATOR ='','', ROWTERMINATOR =''\n'', TABLOCK)';
+		EXEC(@sql);
+	END
+END
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
 	set @TableName = 'Employee'																				  ------------------CAN CHANGE---------------
@@ -84,6 +108,7 @@ BEGIN
 		EXEC [Create] @DBName, @TableName,
 		'(
 			EmployeeID INT PRIMARY KEY IDENTITY(1, 1),
+			LeaveDaysLeft INT DEFAULT 20,
 			FirstName varchar(300),
 			LastName varchar(300)
 		 )';
@@ -111,37 +136,13 @@ BEGIN
 		EXEC [Create] @DBName, @TableName,
 		'(	
 			LeaveID INT PRIMARY KEY IDENTITY(1, 1),
+			EmployeeID INT FOREIGN KEY REFERENCES Employee(EmployeeID),
+			LeaveType varchar(500) FOREIGN KEY REFERENCES LeaveType(LeaveType),
 			StartDate DATE,
-			EndDate DATE,
-			DaysLeft INT DEFAULT 20,
+			EndDate DATE,	
 			DaysTaken INT,
 			Reason varchar(5000)
 			
-		 )';
-
-	set @s = 'select @cnt = (select count(*) from ' + @TableName +')';
-	exec sp_executesql @s, N'@cnt nvarchar(20) output', @cnt output;
-
-	IF(@Cnt < 2)
-	BEGIN	
-		set @FileName = @RelDir+@TableName+'.csv'
-		print @filename
-		set @sql = 'BULK INSERT ' + @TableName + ' FROM ''' + @FileName + ''' WITH (FIRSTROW = 2, FIELDTERMINATOR ='','', ROWTERMINATOR =''\n'', TABLOCK)';
-		EXEC(@sql);
-	END
-END
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-BEGIN
-	set @TableName = 'LeaveType'																		                ------------------CAN CHANGE---------------
-
-	IF EXISTS (SELECT * FROM sysobjects WHERE name = @TableName and xtype='U')
-	BEGIN	
-		select @sql = 'DROP TABLE ' + @TableName
-		exec (@sql)	
-	END	
-		EXEC [Create] @DBName, @TableName,
-		'(							
-			LeaveType varchar(500) PRIMARY KEY
 		 )';
 
 	set @s = 'select @cnt = (select count(*) from ' + @TableName +')';

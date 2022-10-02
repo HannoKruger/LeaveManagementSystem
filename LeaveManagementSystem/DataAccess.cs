@@ -26,9 +26,8 @@ namespace LeaveManagementSystem
 
         //Default constructor to be used by business logic layer classes 
         public DataAccess()
-        {
-            // update connection string
-            this.ConnectionString = @"Data Source=DESKTOP-HK;Initial Catalog=Northwind;Integrated Security=True";
+        {            
+            this.ConnectionString = @"Data Source=DESKTOP-HK;Initial Catalog=LeaveManagement;Integrated Security=True";
             sql_connection = new SqlConnection(ConnectionString);
         }
 
@@ -49,11 +48,9 @@ namespace LeaveManagementSystem
         }
 
         public object[] RetrieveObjects(Type type, string condition = "")
-        {
-            DataSet ds = new DataSet();
-            var adaptor = RetrieveData(type.Name, condition);
-            adaptor.Fill(ds);
-            DataTable table = ds.Tables[0];
+        {        
+            var table = RetrieveData(type.Name, condition);
+            
 
             object[] results = new object[table.Rows.Count];
 
@@ -96,12 +93,9 @@ namespace LeaveManagementSystem
             return results;
         }
         public object[] RetrieveObjects(string dbType, Type type, string condition = "")
-        {
-            DataSet ds = new DataSet();
-            var adaptor = RetrieveData(dbType, condition);
-            adaptor.Fill(ds);
-            DataTable table = ds.Tables[0];
-
+        {         
+            var table = RetrieveData(dbType, condition);
+           
             object[] results = new object[table.Rows.Count];
 
             for (int i = 0; i < results.Length; i++)
@@ -148,7 +142,7 @@ namespace LeaveManagementSystem
             Insert(obj.GetType().Name, GetFieldValues(obj));
         }
 
-        public SqlDataAdapter RetrieveData(string table, string condition = "")
+        public DataTable RetrieveData(string table, string condition = "")
         {
             sql_connection.Open();
 
@@ -175,9 +169,14 @@ namespace LeaveManagementSystem
                 sql_connection.Close();
             }
 
-            if (adapter == null) { }//raise excepetion or something here
+            if (adapter == null) { throw new Exception("Adapter is null"); }
 
-            return adapter;
+
+            DataSet ds = new DataSet();          
+            adapter.Fill(ds);
+            DataTable t = ds.Tables[0];
+
+            return t;
         }
 
         public void Insert(string table, (string Field, string Value)[] FieldValues)
@@ -312,5 +311,4 @@ namespace LeaveManagementSystem
             }
         }
     }
-
 }

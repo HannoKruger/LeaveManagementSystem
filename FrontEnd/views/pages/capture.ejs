@@ -47,59 +47,61 @@
         <div id="margin">
 
             <section>
-                <form id="form" action="/form-post" method="post" class="row g-3 needs-validation" novalidate>
+                <form id="form" action="/form-data" method="post" class="row g-3 needs-validation" novalidate>
                     <div class="col-6">
                         <label for="form-elem" class="form-label">First name</label>
-                        <input name="Name" type="text" class="form-control" id="form-name" onfocusout="GetCurrentLeave()" placeholder="Mark" required>
+                        <input name="FirstName" type="text" class="form-control" id="form-name" onfocusout="GetCurrentLeave()" placeholder="Mark" required>
                         <div class="valid-feedback">Looks good!</div>
                     </div>
                     <div class="col-6">
                         <label for="form-elem" class="form-label">Last name</label>
-                        <input name="Surname" type="text" class="form-control" id="form-surname" onfocusout="GetCurrentLeave()" placeholder="Otto"
+                        <input name="LastName" type="text" class="form-control" id="form-surname" onfocusout="GetCurrentLeave()" placeholder="Otto"
                             required>
                         <div class="valid-feedback">Looks good!</div>
                     </div>
 
                     <div class="col-6">
                         <label for="form-elem" class="form-label">Leave start date</label>
-                        <input name="LeaveStartDate" type="date" class="form-control" id="form-leave-start" required>
+                        <input name="LeaveStartDate" type="date" class="form-control" onfocusout="CalculateLeave()" id="form-leave-start" required>
                         <div class="valid-feedback">Looks good!</div>
                     </div>
                     <div class="col-6">
                         <label for="form-elem" class="form-label">Leave end date</label>
-                        <input name="LeaveEndDate" type="date" class="form-control" id="form-leave-end" required>
+                        <input name="LeaveEndDate" type="date" class="form-control" onfocusout="CalculateLeave()" id="form-leave-end" required>
                         <div class="valid-feedback">Looks good!</div>
                     </div>
 
                     
-                        <div class="row-sm-6">
-                            <label for="message" class="form-label">Current leave left (without current subtracted):</label>
-                            <input type="number" readonly class="form-disp" id="form-current-leave">
-                        </div>
-                        <div class="row-sm-6">
-                            <label for="message" class="form-label">Total Leave days taken:</label>
-                            <input type="number" readonly class="form-disp">
-                        </div>
-                        <div class="row-sm-6">
-                            <label for="message" class="form-label">Total Leave days left:</label>
-                            <input type="number" readonly class="form-disp">
-                        </div>
+                    <div class="row-sm-6">
+                        <label for="message" class="form-label">Current leave left (without current subtracted):</label>
+                        <input type="number" name="" readonly class="form-disp" id="form-current-leave">
+                    </div>
+                    <div class="row-sm-6">
+                        <label for="message" class="form-label">Total Leave days taken:</label>
+                        <input type="number" name="" id="form-days-taken" readonly class="form-disp">
+                    </div>
+                    <div class="row-sm-6">
+                        <label for="message" class="form-label">Total Leave days left:</label>
+                        <input type="number" name="" id="form-days-left" readonly class="form-disp">
+                    </div>
                    
-
 
                     <div class="row-6">
                         <label for="form-elem" class="form-label">Choose the type of leave</label>
-                        <select class="form-select">
-                            <option value="0" selected>Zero</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                        <select name="LeaveType" id="form-select-option" class="form-select">
+                            <option value="Annual" selected>Annual</option>
+                            <option value="Family Responsibility">Family Responsibility</option>
+                            <option value="Sick">Sick</option>
+                            <option value="Maternity">Maternity</option>
+                            <option value="Unpaid">Unpaid</option>
+                            <option value="Study">Study</option>
                         </select>
                     </div>
 
+
                     <div class="col-sm-6">
                         <label for="message" class="form-label">Reason</label>
-                        <textarea rows="2" name="message" id="message" placeholder="Your Message"
+                        <textarea rows="2" name="Message" id="message" placeholder="Your Message"
                             class="form-control w-full px-3 py-2 rounded-sm placeholder-gray-500 text-gray-900 bg-gray-100 text-sm focus:btn-outline-primary"
                             required></textarea>
                     </div>
