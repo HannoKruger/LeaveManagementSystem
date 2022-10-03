@@ -1,4 +1,3 @@
-
 const bodyParser = require('body-parser');
 const express = require('express');
 const http = require('http');
@@ -7,6 +6,9 @@ const qs = require('querystring')
 const request = require('request');
 const router = express.Router();
 
+const  calendar = require('./calendar.cjs');
+const insertEvent = calendar.insertEvent;
+const dateTimeForCalander = calendar.dateTimeForCalander;
 
 
 // Initialise Express
@@ -28,10 +30,36 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 router.post('/form-data', async (req, res) => 
 {
+    
+    let dateTime = dateTimeForCalander(new Date(req.body.LeaveStartDate), new Date(req.body.LeaveEndDate));
+
+    // Event for Google Calendar
+    let event = {
+        'summary': "Leave for:" + req.body.LeaveType,
+        'description': req.body.Message,
+        'start': {
+            'dateTime': dateTime['start'],
+            'timeZone': 'Africa/Johannesburg'
+        },
+        'end': {
+            'dateTime': dateTime['end'],
+            'timeZone': 'Africa/Johannesburg'
+        }
+    };
+
+
+    insertEvent(event).then((res) => {
+        console.log(res);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
+
+
     console.log("Req for:" + JSON.stringify(req.body));
 
     let data = "Sucess";
-
 
     request.post({
         headers: { 'content-type': 'application/json; charset=utf-8' },
@@ -42,7 +70,6 @@ router.post('/form-data', async (req, res) =>
         console.log("Response from server: " + body);
 
     });
-
 
 
     //console.log('data returned: '+ JSON.stringify(data));

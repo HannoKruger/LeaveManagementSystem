@@ -39,6 +39,7 @@ function CalculateLeave()
 
         let days = (end - start) / (1000 * 60 * 60 * 24);
 
+        
         $("#form-days-taken").val(days);
 
         if($("#form-current-leave").val() != "") {
