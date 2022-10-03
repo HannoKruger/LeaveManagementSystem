@@ -19,12 +19,10 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
-
 
 
 router.post('/form-data', async (req, res) => 
@@ -44,7 +42,6 @@ router.post('/form-data', async (req, res) =>
             'timeZone': 'Africa/Johannesburg'
         }
     };
-
 
 
     console.log("Req for:" + JSON.stringify(req.body));
@@ -69,18 +66,12 @@ router.post('/form-data', async (req, res) =>
         console.log(err);
     });
 
-
-
-    //console.log('data returned: '+ JSON.stringify(data));
-
     res.json(data);
 });
 
 
 router.get('/leave', async (req, res) =>
 {
-    //console.log("Req for:" + req.query);
-
     request.get(
         {
             headers: { 'content-type': 'application/json; charset=utf-8' },
@@ -95,7 +86,6 @@ router.get('/leave', async (req, res) =>
 
             res.json(body);
         });
-
 });
 
 
@@ -119,7 +109,6 @@ app.get('/capture', (req, res) =>
 });
 
 
-
 app.get('/list', (req, res) =>
 {
     request.get(
@@ -132,9 +121,7 @@ app.get('/list', (req, res) =>
         {
             console.log("List response: "+response.statusCode);  
             
-
             let leaveRequests = JSON.parse(body);
-
 
             res.render('pages/requests', { leaveRequests: leaveRequests });
      
@@ -149,4 +136,4 @@ app.use((req, res) =>
 {
     //404 section here
     res.status(404).render('pages/404.ejs')
-})
+});

@@ -63,9 +63,7 @@ const dateTimeForCalander = (start,end) => {
     startDate = subtractHours(2, startDate);
     
     let endDate = startDate.addDays((end-start)/(1000*60*60*24));
-    //new Date(new Date(startDate).setHours(startDate.getHours()+((end-start).getHours())));
-    //new Date(new Date(startDate).setHours(startDate.getHours()+1));
-
+   
     return {
         'start': startDate,
         'end': endDate
@@ -113,16 +111,6 @@ const getEvents = async (dateTimeStart, dateTimeEnd) => {
     }
 };
 
-// let start = '2020-10-03T00:00:00.000Z';
-// let end = '2020-10-04T00:00:00.000Z';
-
-// getEvents(start, end)
-//     .then((res) => {
-//         console.log(res);
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//     });
 
 // Delete an event from eventID
 const deleteEvent = async (eventId) => {
@@ -144,7 +132,6 @@ const deleteEvent = async (eventId) => {
         return 0;
     }
 };
-
 
 
 module.exports = {insertEvent,dateTimeForCalander, getEvents, deleteEvent};

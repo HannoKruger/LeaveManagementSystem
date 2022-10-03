@@ -1,14 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
 
 
-/* rgb(89 167 153 / 93%) */
-
-
 /* Global */
 body
 {
-     position: relative;
-    /* padding-top: 65px; */
+    position: relative;  
     height: 100%;
     background: rgb(227, 245, 238);
     font-family: 'Open Sans', sans-serif;
@@ -25,7 +21,6 @@ h1,h2
 {
     color: rgb(14, 33, 51);
 }
-
 
 
 .title
@@ -52,18 +47,9 @@ section
     max-width: 70px;
 }
 
-/* Home section */
-.bimage 
+
+.card 
 {
-    
-    background: url('/assets/images/mandelbrot4k.jpg');
-    opacity: 0.8;
-
-    /* background-image: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), url('/assets/images/mandelbrot4k.jpg'); */ 
-}
-
-
-.card {
     --bs-card-spacer-y: 1rem;
     --bs-card-spacer-x: 1rem;
     --bs-card-title-spacer-y: 0.5rem;

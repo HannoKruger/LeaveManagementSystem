@@ -43,9 +43,7 @@ namespace LeaveManagementSystem
 
                 if (value != null)               
                     fieldValues.Add((property.Name, value.ToString()));
-                
-                //Console.WriteLine($"Property: {property.Name} value: {value.ToString()}");
-                
+                               
             }
             return fieldValues.ToArray();
         }
@@ -73,8 +71,7 @@ namespace LeaveManagementSystem
                     }
                     else if (t.Name == "String")
                     {
-                        args[j] = row[j].ToString();
-                        //Console.WriteLine(row[j].ToString());
+                        args[j] = row[j].ToString();                     
                     }
                     else if (t.Name == "Int32")
                     {
@@ -90,8 +87,6 @@ namespace LeaveManagementSystem
                         Console.WriteLine($"Undefined type with Name: {t.Name} returned from DB in RetrieveObjects");
                     }
                 }
-
-                //Console.WriteLine(row[0].ToString());
 
                 results[i] = Activator.CreateInstance(type, args);
                 //here we create a object by type and passing in values to its constructor
@@ -121,13 +116,11 @@ namespace LeaveManagementSystem
                     }
                     else if (t.Name == "String")
                     {
-                        args[j] = row[j].ToString();
-                        //Console.WriteLine(row[j].ToString());
+                        args[j] = row[j].ToString();                    
                     }
                     else if (t.Name == "Int32")
                     {
-                        args[j] = row[j].ToString();//we use string for ids but in the database it is int
-                        //Convert.ToInt32(row[j].ToString());
+                        args[j] = row[j];                     
                     }
                     else
                     {
@@ -207,7 +200,7 @@ namespace LeaveManagementSystem
                 }
             }
 
-            string query = $"INSERT INTO {table}({FieldsConcat}) VALUES({ValuesConcat})";//.ToLower();
+            string query = $"INSERT INTO {table}({FieldsConcat}) VALUES({ValuesConcat})";
             Console.WriteLine(query);
 
             SqlCommand command = new SqlCommand(query, sql_connection);
@@ -215,7 +208,6 @@ namespace LeaveManagementSystem
             {
                 command.ExecuteNonQuery();
 
-                //Console.WriteLine("Values inserted");
                 Debug.WriteLine("Insert successful");
             }
             catch (Exception error)
@@ -257,8 +249,7 @@ namespace LeaveManagementSystem
             try
             {
                 command.ExecuteNonQuery();
-                //Console.WriteLine(query);
-                //Console.WriteLine("Value updated");
+              
                 Debug.WriteLine("Update successful");
             }
             catch (Exception error)
@@ -299,8 +290,7 @@ namespace LeaveManagementSystem
             try
             {
                 command.ExecuteNonQuery();
-                //Console.WriteLine(query);
-                //Console.WriteLine("Value updated");
+             
                 Debug.WriteLine("Update successful");
             }
             catch (Exception error)
@@ -325,8 +315,7 @@ namespace LeaveManagementSystem
             try
             {
                 command.ExecuteNonQuery();
-                //Console.WriteLine(query);
-                //Console.WriteLine("Value deleted");
+            
                 Debug.WriteLine("Delete successful");
             }
             catch (Exception error)
@@ -346,8 +335,7 @@ namespace LeaveManagementSystem
             try
             {
                 command.ExecuteNonQuery();
-
-                //Console.WriteLine("Values inserted");
+             
                 Debug.WriteLine("Successful");
             }
             catch (Exception error)

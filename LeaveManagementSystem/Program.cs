@@ -56,10 +56,6 @@ namespace LeaveManagementSystem
                         break;
                 }
 
-                //context.Request.InputStream.Close();
-                //context.Response.OutputStream.Close();
-
-
                 Receive();
             }
         }
@@ -124,16 +120,10 @@ namespace LeaveManagementSystem
                 case "/leave-requests":
                     {
                         Console.WriteLine("/leave-requests");
-                      
-                        //string data = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
-
-                        //Employee emp = JsonConvert.DeserializeObject<Employee>(data);
-
-                        //Console.WriteLine($"Name:{emp.FirstName}  Surname:{emp.LastName}");
+                                          
 
                         var table = db.RetrieveData("Employee");
-
-                        
+                      
 
                         if (table.Rows.Count == 0)
                         {
@@ -150,22 +140,7 @@ namespace LeaveManagementSystem
                             requests[i] = new Request((int)row["EmployeeID"], (int)row["LeaveDaysLeft"], (string)row["FirstName"], (string)row["LastName"]);
                         }
 
-
-                        //get the first matching employee
-                        //var row = table.Rows[0];
-                        //Console.WriteLine("Row:" + row);
-
-                        //var daysLeft = (int)row["LeaveDaysLeft"];
-
-                        //string tables = "";
-                        //for (int i = 0; i < requests.Length; i++)
-                        //{
-                        //    tables += requests[i].BuildTable();
-                        //}
-
-
                         Respond(JsonConvert.SerializeObject(requests), context.Response);
-
                     }
                     break;
 
@@ -174,39 +149,10 @@ namespace LeaveManagementSystem
                     context.Response.Close();
                     break;
             }
-
-            //if (context.Request.HasEntityBody)
-            //{
-            //    Console.WriteLine("Content type: {0}", context.Request.ContentType);
-
-            //    string data = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
-
-
-            //    //Console.WriteLine(data);
-
-
-            //    Employee emp = JsonConvert.DeserializeObject<Employee>(data);
-
-            //    Console.WriteLine($"Name:{emp.Name}  Surname:{emp.Surname}");
-
-
-
-            //    //HttpMultipartParser parser = new HttpMultipartParser(context.Request.InputStream, context.Request.ContentType);
-            //    //var parser = MultipartFormDataParser.Parse(context.Request.InputStream);
-
-            //    //foreach (var param in parser.Parameters)
-            //    //{
-            //    //    Console.WriteLine($"Param: {param.Name} = {param.Data}");
-            //    //}
-
-            //}
-
-
         }
         void WriteBody(HttpListenerRequest request)
         {
-            //if (request.HasEntityBody)
-
+          
             var body = request.InputStream;
             var encoding = request.ContentEncoding;
             var reader = new StreamReader(body, encoding);
@@ -248,7 +194,7 @@ namespace LeaveManagementSystem
 
                     form.WriteToDB();
 
-                    
+                   
                     Respond("Succes", context.Response);
                     break;
 
@@ -257,18 +203,6 @@ namespace LeaveManagementSystem
                     context.Response.Close();
                     break;
             }
-
-
-            //if (context.Request.HasEntityBody)
-            //{
-            //    Console.WriteLine("Content type: {0}", context.Request.ContentType);
-
-            //    using (var reader = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding))
-            //    {
-            //        Console.WriteLine("Client data: {0}", reader.ReadToEnd());
-            //    }
-            //}
-
         }
     }
     
@@ -296,21 +230,8 @@ namespace LeaveManagementSystem
 
             leaves = (Leave[])Array.CreateInstance(typeof(Leave), objs.Length);
             Array.Copy(objs, leaves, objs.Length);
-
-            if (leaves.Length > 0)
-            {
-                //Console.WriteLine(leaves[0].ToString());
-            }
-        }
-        public string BuildTable()
-        {
-           
-            string table = $"<table><tr><th>EmployeeID</th><th>FirstName</th><th>LastName</th><th>LeaveDaysLeft</th></tr><tr><td>{EmployeeID}</td><td>{FirstName}</td><td>{LastName}</td><td>{LeaveDaysLeft}</td></tr></table>";
-
-            return table;
-            
-        }
-      
+       
+        }         
     }
 
     public class Leave
@@ -342,7 +263,6 @@ namespace LeaveManagementSystem
             DaysTaken = daysTaken;
             Reason = reason;
         }
-
 
         public override string ToString()
         {
@@ -392,8 +312,6 @@ namespace LeaveManagementSystem
         {
             DataAccess db = new DataAccess();
 
-            //Console.WriteLine($"Name:{emp.FirstName}  Surname:{emp.LastName}");
-
             var table = db.RetrieveData("Employee", $"FirstName = '{this.FirstName}' AND LastName = '{this.LastName}'");
 
 
@@ -410,16 +328,12 @@ namespace LeaveManagementSystem
             var leaveDaysTaken = (LeaveEndDate - LeaveStartDate).Days;
             leaveDaysLeft -= leaveDaysTaken;
 
-            //$"LeaveDaysLeft = '{leaveDaysLeft}'", $"EmployeeID = '{employeeID}'" 
-
+         
             db.Update("Employee", new[] { ($"LeaveDaysLeft", leaveDaysLeft) }, $"EmployeeID = '{employeeID}'");
-
 
             var leave = new Leave(employeeID, LeaveType, LeaveStartDate, LeaveEndDate, (LeaveEndDate - LeaveStartDate).Days, Message);
             Console.WriteLine(leave.ToString());
             db.InsertObject(leave);
-
-
         }
 
 
@@ -436,8 +350,6 @@ namespace LeaveManagementSystem
     internal class Program
     {
         private static bool keepRunning = true;
-
-
 
         public static void Go()
         {
@@ -459,10 +371,8 @@ namespace LeaveManagementSystem
             Console.WriteLine("Exiting gracefully...");
         }
 
-
         static void Main(string[] args)
         {
-
             Go();
         }
     }

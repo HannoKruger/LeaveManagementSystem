@@ -37,11 +37,7 @@ body {
   height: 0px;
   background: #0C0E10;
 }
-/* @media (max-width: 770px) {
-  .background .ground {
-    height: 0vh;
-  }
-} */
+
 
 .container {
   position: relative;

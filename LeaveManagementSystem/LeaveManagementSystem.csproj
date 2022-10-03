@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DataAcess\" />
+    <Compile Remove="DataAcess\**" />
+    <EmbeddedResource Remove="DataAcess\**" />
+    <None Remove="DataAcess\**" />
   </ItemGroup>
 
   <ItemGroup>
