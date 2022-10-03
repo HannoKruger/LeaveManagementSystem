@@ -74,6 +74,7 @@ router.get('/leave', async (req, res) =>
 
 
 
+
 const port = process.env.PORT || 3000;
 
 const server = http.createServer(app);
@@ -92,9 +93,28 @@ app.get('/capture', (req, res) =>
     res.status(200).render('pages/capture');
 });
 
+
+
 app.get('/list', (req, res) =>
 {
-    res.render('pages/requests');
+    request.get(
+        {
+            headers: { 'content-type': 'text/plain' },
+            url: 'http://localhost:8080' + '/leave-requests',
+            body: JSON.stringify(req.query)
+        },
+        function (error, response, body) 
+        {
+            console.log("List response: "+response.statusCode);  
+            
+
+            let leaveRequests = JSON.parse(body);
+
+
+            res.render('pages/requests', { leaveRequests: leaveRequests });
+     
+        });
+
 });
 
 

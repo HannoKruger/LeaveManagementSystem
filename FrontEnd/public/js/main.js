@@ -55,7 +55,6 @@ function CalculateLeave()
 }
 
 
-
 $(document).ready(() =>
 {
     var frm = $('#form');

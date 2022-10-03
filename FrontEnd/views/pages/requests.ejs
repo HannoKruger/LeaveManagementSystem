@@ -35,7 +35,7 @@
             var style = document.getElementById("list-nav").style;
             style.borderRadius = "6px";
             style.backgroundColor = "rgb(98, 149, 189)";
-            style.transition = "background-color 3500ms";
+            style.transition = "background-color 3500ms";          
         });
     </script>
 
@@ -43,19 +43,65 @@
         <div id="margin">
 
 
+            <section id="requests">
+
+                <% for(var i = 0; i < leaveRequests.length; i++)
+                {%>                   
+
+                    <div class="card card-body">
+                        <h5 class="card-title"><%= leaveRequests[i].FirstName %> <%= leaveRequests[i].LastName %></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Leave days left: <%= leaveRequests[i].LeaveDaysLeft %></h6>
 
 
-            <!-- about section-->
-            <section id="about">
-                <div class="container mt-4 pt-4">
-                    <h1>Requests</h1>
-                                  
-                </div>
+                        <% if(leaveRequests[i].leaves.length > 0) 
+                        {%>
+                            <a class="btn btn-primary" data-bs-toggle="collapse" href="#c_<%= (i+1) %>" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                Leave History
+                            </a>
+
+                            <div class="collapse" id="c_<%= (i+1) %>">
+                                <div class="card card-body">  
+                                    <div class="table-responsive">                
+                                        <table class="table table-striped table-dark table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Leave Type</th>
+                                                    <th scope="col">Start Date</th>
+                                                    <th scope="col">End Date</th>
+                                                    <th scope="col">Reason</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% for(var j = 0; j < leaveRequests[i].leaves.length; j++)
+                                                {%>
+                                                    <tr>
+                                                        <th scope="row"><%=j+1%></th>
+                                                        <td><%= leaveRequests[i].leaves[j].LeaveType %></td>
+                                                        <td><%= (new Date(leaveRequests[i].leaves[j].StartDate)).toLocaleDateString('en-ZA'); %></td>
+                                                        <td><%= (new Date(leaveRequests[i].leaves[j].EndDate)).toLocaleDateString('en-ZA'); %></td>
+                                                        <td><%= leaveRequests[i].leaves[j].Reason %></td>
+                                                    </tr>
+                                                <%}%>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        <%}%>
+                        <% if(leaveRequests[i].leaves.length === 0) 
+                        {%>
+                            <h6 class="card-text">No leave history</h6>
+                        <%}%>
+                                                                                                          
+                    </div>
+
+                <%}%>
+
+      
             </section>
-
-
-          
         </div>
+
 </body>
 
 </html>

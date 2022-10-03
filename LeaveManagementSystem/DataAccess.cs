@@ -41,8 +41,11 @@ namespace LeaveManagementSystem
             {
                 object value = property.GetValue(obj, null);
 
+                if (value != null)               
+                    fieldValues.Add((property.Name, value.ToString()));
+                
                 //Console.WriteLine($"Property: {property.Name} value: {value.ToString()}");
-                fieldValues.Add((property.Name, value.ToString()));
+                
             }
             return fieldValues.ToArray();
         }
@@ -75,9 +78,13 @@ namespace LeaveManagementSystem
                     }
                     else if (t.Name == "Int32")
                     {
-                        args[j] = row[j].ToString();//we use string for ids but in the database it is int
-                        //Convert.ToInt32(row[j].ToString());
+                        //args[j] = row[j].ToString();//we use string for ids but in the database it is int
+                        args[j] = row[j];                  
                     }
+                    else if (t.Name == "DateTime")
+                    {
+                        args[j] = row[j];
+                    }                
                     else
                     {
                         Console.WriteLine($"Undefined type with Name: {t.Name} returned from DB in RetrieveObjects");
@@ -233,6 +240,48 @@ namespace LeaveManagementSystem
                     builder += $"{FieldValues[i].Field} = '{FieldValues[i].Value}'";
                 else
                     builder += $"{FieldValues[i].Field} = '{FieldValues[i].Value}', ";
+            }
+
+            string query;
+
+            if (condition == "")
+                query = $"UPDATE {table} SET {builder}";
+            else
+                query = $"UPDATE {table} SET {builder} WHERE {condition}";
+
+            Console.WriteLine(query);
+
+
+            SqlCommand command = new SqlCommand(query, sql_connection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+                //Console.WriteLine(query);
+                //Console.WriteLine("Value updated");
+                Debug.WriteLine("Update successful");
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine("Update Error: " + error.Message);
+            }
+            finally
+            {
+                sql_connection.Close();
+            }
+        }
+        public void Update(string table, (string Field, int Value)[] FieldValues, string condition = "")
+        {
+            sql_connection.Open();
+
+            string builder = "";
+
+            for (int i = 0; i < FieldValues.Length; i++)
+            {
+                if (i == FieldValues.Length - 1)
+                    builder += $"{FieldValues[i].Field} = {FieldValues[i].Value}";
+                else
+                    builder += $"{FieldValues[i].Field} = {FieldValues[i].Value}, ";
             }
 
             string query;

@@ -3,6 +3,8 @@ using HttpMultipartParser;
 using System.Net;
 using System.Text;
 using System.IO;
+using System.Data;
+using System;
 
 namespace LeaveManagementSystem
 {
@@ -11,7 +13,7 @@ namespace LeaveManagementSystem
         public int Port = 8080;
         private DataAccess db = new DataAccess();
         private HttpListener listener;
-        
+
 
         public void Start(int? port = null)
         {
@@ -56,7 +58,7 @@ namespace LeaveManagementSystem
 
                 //context.Request.InputStream.Close();
                 //context.Response.OutputStream.Close();
-                
+
 
                 Receive();
             }
@@ -87,38 +89,84 @@ namespace LeaveManagementSystem
                     break;
 
                 case "/leave":
-                    Console.WriteLine("/leave");
+                    {
+                        Console.WriteLine("/leave");
 
 
-                    string data = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
-                
-                    Employee emp = JsonConvert.DeserializeObject<Employee>(data);
-                    
-                    Console.WriteLine($"Name:{emp.FirstName}  Surname:{emp.LastName}");
+                        string data = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
 
-                    var table = db.RetrieveData("Employee", $"FirstName = '{emp.FirstName}' AND LastName = '{emp.LastName}'");
-                   
+                        Employee emp = JsonConvert.DeserializeObject<Employee>(data);
 
-                    if(table.Rows.Count == 0)
-                    {                    
-                        Console.WriteLine("No employee found");
-                        Respond(JsonConvert.SerializeObject("EmployeeNotFound"), context.Response);
-                        break;
+                        Console.WriteLine($"Name:{emp.FirstName}  Surname:{emp.LastName}");
+
+                        var table = db.RetrieveData("Employee", $"FirstName = '{emp.FirstName}' AND LastName = '{emp.LastName}'");
+
+
+                        if (table.Rows.Count == 0)
+                        {
+                            Console.WriteLine("No employee found");
+                            Respond(JsonConvert.SerializeObject("EmployeeNotFound"), context.Response);
+                            break;
+                        }
+                        //get the first matching employee
+                        var row = table.Rows[0];
+
+                        var daysLeft = (int)row["LeaveDaysLeft"];
+                        Respond(JsonConvert.SerializeObject(daysLeft), context.Response);
+
                     }
-                    //get the first matching employee
-                    var row = table.Rows[0];
-
-                    var daysLeft = (int)row["LeaveDaysLeft"];
-                    Respond(JsonConvert.SerializeObject(daysLeft), context.Response);
-
                     break;
 
                 case "/employees":
                     Console.WriteLine("/employees");
                     break;
 
-                case "leave-requests":
-                    Console.WriteLine("/leave-requests");
+                case "/leave-requests":
+                    {
+                        Console.WriteLine("/leave-requests");
+                      
+                        //string data = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
+
+                        //Employee emp = JsonConvert.DeserializeObject<Employee>(data);
+
+                        //Console.WriteLine($"Name:{emp.FirstName}  Surname:{emp.LastName}");
+
+                        var table = db.RetrieveData("Employee");
+
+                        
+
+                        if (table.Rows.Count == 0)
+                        {
+                            Console.WriteLine("No employee found");
+                            Respond(JsonConvert.SerializeObject("EmployeeNotFound"), context.Response);
+                            break;
+                        }
+
+                        Request[] requests = new Request[table.Rows.Count];
+
+                        for (int i = 0; i < table.Rows.Count; i++)
+                        {
+                            var row = table.Rows[i];
+                            requests[i] = new Request((int)row["EmployeeID"], (int)row["LeaveDaysLeft"], (string)row["FirstName"], (string)row["LastName"]);
+                        }
+
+
+                        //get the first matching employee
+                        //var row = table.Rows[0];
+                        //Console.WriteLine("Row:" + row);
+
+                        //var daysLeft = (int)row["LeaveDaysLeft"];
+
+                        //string tables = "";
+                        //for (int i = 0; i < requests.Length; i++)
+                        //{
+                        //    tables += requests[i].BuildTable();
+                        //}
+
+
+                        Respond(JsonConvert.SerializeObject(requests), context.Response);
+
+                    }
                     break;
 
                 default:
@@ -133,15 +181,15 @@ namespace LeaveManagementSystem
 
             //    string data = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
 
-                
+
             //    //Console.WriteLine(data);
 
 
             //    Employee emp = JsonConvert.DeserializeObject<Employee>(data);
 
             //    Console.WriteLine($"Name:{emp.Name}  Surname:{emp.Surname}");
-                
-                
+
+
 
             //    //HttpMultipartParser parser = new HttpMultipartParser(context.Request.InputStream, context.Request.ContentType);
             //    //var parser = MultipartFormDataParser.Parse(context.Request.InputStream);
@@ -152,8 +200,8 @@ namespace LeaveManagementSystem
             //    //}
 
             //}
-        
-         
+
+
         }
         void WriteBody(HttpListenerRequest request)
         {
@@ -170,7 +218,7 @@ namespace LeaveManagementSystem
 
             Console.WriteLine("Start of data:");
             string s = reader.ReadToEnd();
-            
+
             Console.WriteLine(s);
             Console.WriteLine("End of data");
             reader.Close();
@@ -189,19 +237,19 @@ namespace LeaveManagementSystem
                     context.Response.Close();
                     break;
                 case "/form-data":
-                    
+
                     Console.WriteLine("/form-data");
 
                     string data = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
 
                     Console.WriteLine($"Recieved:{data}");
-                    
+
                     Form form = JsonConvert.DeserializeObject<Form>(data);
 
                     form.WriteToDB();
 
-
-                    Respond(JsonConvert.SerializeObject("Succes"), context.Response);
+                    
+                    Respond("Succes", context.Response);
                     break;
 
                 default:
@@ -223,20 +271,60 @@ namespace LeaveManagementSystem
 
         }
     }
+    
+    public class Request
+    {
+        private DataAccess db = new DataAccess();
+
+        public int EmployeeID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int LeaveDaysLeft { get; set; }
+
+        public Leave[] leaves { get; set; }
+
+        public Request(int employeeID, int leaveDaysLeft, string firstName, string lastName)
+        {
+            EmployeeID = employeeID;
+            FirstName = firstName;
+            LastName = lastName;
+            LeaveDaysLeft = leaveDaysLeft;
+
+            //leaves = (Leave[])db.RetrieveObjects(typeof(Leave));
+
+            object[] objs = db.RetrieveObjects(typeof(Leave), $"EmployeeID = '{EmployeeID}'");
+
+            leaves = (Leave[])Array.CreateInstance(typeof(Leave), objs.Length);
+            Array.Copy(objs, leaves, objs.Length);
+
+            if (leaves.Length > 0)
+            {
+                //Console.WriteLine(leaves[0].ToString());
+            }
+        }
+        public string BuildTable()
+        {
+           
+            string table = $"<table><tr><th>EmployeeID</th><th>FirstName</th><th>LastName</th><th>LeaveDaysLeft</th></tr><tr><td>{EmployeeID}</td><td>{FirstName}</td><td>{LastName}</td><td>{LeaveDaysLeft}</td></tr></table>";
+
+            return table;
+            
+        }
+      
+    }
 
     public class Leave
     {
-        //public int? LeaveID { get; set; }
+        public int? LeaveID { get; set; }
         public int EmployeeID { get; set; }
         public string LeaveType { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int DaysTaken { get; set;}
+        public int DaysTaken { get; set; }
         public string Reason { get; set; }
 
         public Leave(int employeeID, string leaveType, DateTime startDate, DateTime endDate, int daysTaken, string reason)
         {
-            //LeaveID = leaveID;
             EmployeeID = employeeID;
             LeaveType = leaveType;
             StartDate = startDate;
@@ -244,6 +332,17 @@ namespace LeaveManagementSystem
             DaysTaken = daysTaken;
             Reason = reason;
         }
+        public Leave(int leaveID, int employeeID, string leaveType, DateTime startDate, DateTime endDate, int daysTaken, string reason)
+        {
+            LeaveID = leaveID;
+            EmployeeID = employeeID;
+            LeaveType = leaveType;
+            StartDate = startDate;
+            EndDate = endDate;
+            DaysTaken = daysTaken;
+            Reason = reason;
+        }
+
 
         public override string ToString()
         {
@@ -257,7 +356,7 @@ namespace LeaveManagementSystem
         public int LeaveDaysLeft { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
- 
+
         public Employee(int employeeID, int leaveDaysLeft, string firstName, string lastName)
         {
             EmployeeID = employeeID;
@@ -268,7 +367,7 @@ namespace LeaveManagementSystem
 
         public override string ToString()
         {
-            return $"EmployeeID: {EmployeeID} ";
+            return $"EmployeeID: {EmployeeID} LeaveDaysLeft: {LeaveDaysLeft} FirstName: {FirstName} LastName: {LastName}";
         }
     }
     public class Form
@@ -301,19 +400,23 @@ namespace LeaveManagementSystem
             if (table.Rows.Count == 0)
             {
                 Console.WriteLine("No employee found");
-                return;            
+                return;
             }
 
             //get the first matching employee
             var employeeID = (int)table.Rows[0]["EmployeeID"];
+            
+            var leaveDaysLeft = (int)table.Rows[0]["LeaveDaysLeft"];
+            var leaveDaysTaken = (LeaveEndDate - LeaveStartDate).Days;
+            leaveDaysLeft -= leaveDaysTaken;
 
-            var leave = new Leave(employeeID, LeaveType, LeaveStartDate, LeaveEndDate, (int)LeaveEndDate.Subtract(LeaveStartDate).TotalDays, Message);
+            //$"LeaveDaysLeft = '{leaveDaysLeft}'", $"EmployeeID = '{employeeID}'" 
+
+            db.Update("Employee", new[] { ($"LeaveDaysLeft", leaveDaysLeft) }, $"EmployeeID = '{employeeID}'");
 
 
+            var leave = new Leave(employeeID, LeaveType, LeaveStartDate, LeaveEndDate, (LeaveEndDate - LeaveStartDate).Days, Message);
             Console.WriteLine(leave.ToString());
-
-
-
             db.InsertObject(leave);
 
 
@@ -322,9 +425,10 @@ namespace LeaveManagementSystem
 
         public override string ToString()
         {
-            return $"Firstname: {FirstName} ";
+            return $"Firstname: {FirstName} Lastname: {LastName} LeaveStartDate: {LeaveStartDate} LeaveEndDate: {LeaveEndDate} LeaveType: {LeaveType} Message: {Message}";
         }
     }
+    
 
 
 
@@ -334,7 +438,7 @@ namespace LeaveManagementSystem
         private static bool keepRunning = true;
 
 
-        
+
         public static void Go()
         {
             Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
@@ -358,7 +462,7 @@ namespace LeaveManagementSystem
 
         static void Main(string[] args)
         {
-    
+
             Go();
         }
     }
