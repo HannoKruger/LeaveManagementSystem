@@ -205,7 +205,6 @@ namespace LeaveManagementSystem
             }
         }
     }
-    
     public class Request
     {
         private DataAccess db = new DataAccess();
@@ -233,7 +232,6 @@ namespace LeaveManagementSystem
        
         }         
     }
-
     public class Leave
     {
         public int? LeaveID { get; set; }
@@ -342,11 +340,8 @@ namespace LeaveManagementSystem
             return $"Firstname: {FirstName} Lastname: {LastName} LeaveStartDate: {LeaveStartDate} LeaveEndDate: {LeaveEndDate} LeaveType: {LeaveType} Message: {Message}";
         }
     }
-    
 
-
-
-
+   
     internal class Program
     {
         private static bool keepRunning = true;

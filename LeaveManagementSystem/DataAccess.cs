@@ -27,7 +27,7 @@ namespace LeaveManagementSystem
         //Default constructor to be used by business logic layer classes 
         public DataAccess()
         {            
-            this.ConnectionString = @"Data Source=DESKTOP-HK;Initial Catalog=LeaveManagement;Integrated Security=True";
+            this.ConnectionString = @"Data Source=.;Initial Catalog=LeaveManagement;Integrated Security=True";
             sql_connection = new SqlConnection(ConnectionString);
         }
 
