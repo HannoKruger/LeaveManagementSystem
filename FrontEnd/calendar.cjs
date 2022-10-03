@@ -21,6 +21,12 @@ Date.prototype.addDays = function(days) {
     date.setDate(date.getDate() + days);
     return date;
 }
+function subtractHours(numOfHours, date = new Date()) {
+    date.setHours(date.getHours() - numOfHours);
+  
+    return date;
+  }
+  
 
 
 const TIMEOFFSET = '+00:00';
@@ -53,6 +59,8 @@ const dateTimeForCalander = (start,end) => {
     let event = new Date(Date.parse(newDateTime));
 
     let startDate = event;
+
+    startDate = subtractHours(2, startDate);
     
     let endDate = startDate.addDays((end-start)/(1000*60*60*24));
     //new Date(new Date(startDate).setHours(startDate.getHours()+((end-start).getHours())));

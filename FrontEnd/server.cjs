@@ -27,15 +27,13 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 
 
-
 router.post('/form-data', async (req, res) => 
 {
-    
     let dateTime = dateTimeForCalander(new Date(req.body.LeaveStartDate), new Date(req.body.LeaveEndDate));
-
+    
     // Event for Google Calendar
     let event = {
-        'summary': "Leave for:" + req.body.LeaveType,
+        'summary': "Leave for:" + req.body.FirstName + " " + req.body.LastName + "Type:"+ req.body.LeaveType,
         'description': req.body.Message,
         'start': {
             'dateTime': dateTime['start'],
@@ -46,14 +44,6 @@ router.post('/form-data', async (req, res) =>
             'timeZone': 'Africa/Johannesburg'
         }
     };
-
-
-    insertEvent(event).then((res) => {
-        console.log(res);
-    })
-    .catch((err) => {
-        console.log(err);
-    });
 
 
 
@@ -70,6 +60,15 @@ router.post('/form-data', async (req, res) =>
         console.log("Response from server: " + body);
 
     });
+
+
+    insertEvent(event).then((res) => {
+        console.log(res);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
 
 
     //console.log('data returned: '+ JSON.stringify(data));
@@ -98,7 +97,6 @@ router.get('/leave', async (req, res) =>
         });
 
 });
-
 
 
 
@@ -141,9 +139,7 @@ app.get('/list', (req, res) =>
             res.render('pages/requests', { leaveRequests: leaveRequests });
      
         });
-
 });
-
 
 
 

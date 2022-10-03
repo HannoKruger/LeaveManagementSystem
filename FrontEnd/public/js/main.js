@@ -13,6 +13,7 @@ function GetCurrentLeave()
     {
         console.log("GetCurrentLeave");
 
+
         $.ajax({
             url: "/leave",
             type: 'GET',
@@ -20,7 +21,15 @@ function GetCurrentLeave()
             data: { FirstName: $("#form-name").val(), LastName: $("#form-surname").val() },
             success: function (res)
             {
-                console.log("c# resp: "+res);             
+                res = JSON.parse(res);
+
+                //console.log("c# resp: "+res); 
+                
+                if(res === "EmployeeNotFound")
+                {
+                    alert("Employee not found");
+                }
+                
                 $("#form-current-leave").val(res);
             }
         });
