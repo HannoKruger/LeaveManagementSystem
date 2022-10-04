@@ -22,9 +22,9 @@ DECLARE @sql varchar(1500);
 
 
 --Change this to the location where the database will be created, remember to add a backslash at the end 
-SET @RelDir = 'D:\Apps\Microsoft-SQL_Additional_Tools\MSSQL15.MSSQLSERVER\MSSQL\DATA\';							------------------CAN CHANGE---------------
+SET @RelDir = 'D:\Apps\Microsoft-SQL_Additional_Tools\MSSQL15.MSSQLSERVER\MSSQL\DATA\';	            ------------------CHANGE THE PATH---------------
 
-SET @DBName = 'LeaveManagement';                                                                                ------------------CAN CHANGE---------------
+SET @DBName = 'LeaveManagement';                                                                    ------------------CHANGE THIS FOR DIFFIRENT DB NAME---------------
 
 --ON
 SELECT @sql = 'CREATE DATABASE '+ quotename(@DBName) + ' 
@@ -52,7 +52,7 @@ END
 GO
 
 
-USE [LeaveManagement]																									------------------CAN CHANGE---------------
+USE [LeaveManagement]																	           --------------CHANGE THIS FOR DIFFIRENT DB NAME-------------
 GO
 
 
@@ -66,14 +66,14 @@ declare @s nvarchar(1000);
 SET DATEFORMAT YMD
 
 SET @DBName = db_name();
---for csv insert
-SET @RelDir = 'C:\Users\hanno\OneDrive\Documents\Coding\Github\LeaveManagementSystem\DataTier\csv\'						------------------CAN CHANGE---------------
+--for csv insert. Change this to the location of the csv folder, remember to add a backslash at the end
+SET @RelDir = 'C:\Users\hanno\OneDrive\Documents\Coding\Github\LeaveManagementSystem\DataTier\csv\'	 ------------------CAN CHANGE---------------
 
 exec sp_MSforeachtable "declare @name nvarchar(max); set @name = parsename('?', 1); exec sp_MSdropconstraints @name";
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
-	set @TableName = 'LeaveType'																		                ------------------CAN CHANGE---------------
+	set @TableName = 'LeaveType'																		                
 
 	IF EXISTS (SELECT * FROM sysobjects WHERE name = @TableName and xtype='U')
 	BEGIN	
@@ -98,7 +98,7 @@ BEGIN
 END
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
-	set @TableName = 'Employee'																				  ------------------CAN CHANGE---------------
+	set @TableName = 'Employee'																				 
 
 	IF EXISTS (SELECT * FROM sysobjects WHERE name = @TableName and xtype='U')
 	BEGIN	
@@ -126,8 +126,7 @@ BEGIN
 END
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
-	set @TableName = 'Leave'																		                ------------------CAN CHANGE---------------
-
+	set @TableName = 'Leave'																		             
 	IF EXISTS (SELECT * FROM sysobjects WHERE name = @TableName and xtype='U')
 	BEGIN	
 		select @sql = 'DROP TABLE ' + @TableName
